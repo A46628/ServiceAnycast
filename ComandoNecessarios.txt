@@ -1,0 +1,263 @@
+sudo containerlab deploy --topo conf.clab.yaml --reconfigure
+sudo docker ps -a # you cn check all container 
+docker exec -it clab-anycast-r1 Cli # command to access the router
+#no switchport
+
+#show ip route  # ver as rotas de saidas de cada interface
+#ssh remote_username@remote_host
+#ip addr add 192.168.103.1/24 dev eth1
+ip route del default
+#ip route add default via 192.168.103.254
+#sysctl -w net.ipv6.conf.all.disable_ipv6=1
+#sysctl -w net.ipv6.conf.default.disable_ipv6=1
+
+#show ip ospf neighbor
+#show ip route ospf
+#show running-config | section router ospf
+#show ip ospf interface
+#show ip ospf database
+#debug ip ospf adj
+
+
+
+#debug ip ospf LSA
+
+#command to router 
+#show ip route
+#show ip interface brief
+#show running-config interface [interface-id]
+#show interface [interface-id]
+#show running-config
+#show ip ospf
+
+https://www.arista.com/en/um-eos/eos-protocol-independent-multicast
+
+##
+##tem que configurar a tabela de encaminhamento dos routers e testar a conetividades para ver se funciona ou não
+##
+##
+----------------------------------------------------------------------------------------------------------------
+# Command to configure the router 1
+----------------------------------------------------------------------------------------------------------------
+
+enable
+conf t
+interface ether1
+no switchport
+ip address 172.16.12.1 255.255.255.0
+no shutdown
+exit
+interface ether2
+no switchport 
+ip address 192.168.103.254 255.255.255.0
+no shutdown
+exit
+interface ether4 
+no switchport
+ip address 192.168.101.254 255.255.255.0
+no shutdown
+exit
+interface loopback 0
+ip address 172.16.0.1 255.255.255.255
+exit
+ip routing
+router ospf 1 
+network 172.16.12.0 0.0.0.255 area 0
+network 192.168.101.0 0.0.0.255 area 0
+network 192.168.103.0 0.0.0.255 area 0
+network 172.16.0.0 255.255.255.255 area 0
+exit
+write memory
+#
+#how you configure the resolve dns in the router
+-------------------------------------------------------------------------------------------------------
+# Command to configure the router 2
+-------------------------------------------------------------------------------------------------------
+enable
+conf t
+interface ether1
+no switchport
+ip address 172.16.12.2 255.255.255.0
+no shutdown
+exit
+interface ether2
+no switchport 
+ip address 192.168.102.254 255.255.255.0
+no shutdown
+exit
+interface loopback 0
+ip address 172.16.0.2 255.255.255.255
+exit
+ip routing
+router ospf 1 
+network 172.16.12.0 0.0.0.255 area 0
+network 192.168.102.0 0.0.0.255 area 0
+network 172.16.0.0 255.255.255.255 area 0
+exit
+write memory
+#
+
+-------------------------------------------------------------------------------------------------------
+# Command to configure the router DNS Server #1
+-------------------------------------------------------------------------------------------------------
+enable
+conf t
+ip name-server vrf default 8.8.8.8
+ip domain proxy
+ip access-list control-plane
+        counters per-entry
+        10 permit icmp any any
+        20 permit ip any any tracked
+        30 permit udp any any eq bfd ttl eq 255
+        40 permit udp any any eq bfd-echo ttl eq 254
+        50 permit udp any any eq multihop-bfd micro-bfd sbfd
+        60 permit udp any eq sbfd any eq sbfd-initiator
+        70 permit ospf any any 
+        80 permit tcp any any eq ssh telnet www snmp bgp https msdp ldp netconf-ssh gnmi
+        90 permit udp any any eq bootps bootpc snmp rip ntp ldp ptp-event ptp-general
+        100 permit tcp any any eq mlag ttl eq 255
+        110 permit udp any any eq mlag ttl eq 255
+        120 permit vrrp any any
+        130 permit ahp any any
+        140 permit pim any any
+        150 permit igmp any any
+        160 permit tcp any any range 5900 5910
+        170 permit tcp any any range 50000 50100
+        180 permit udp any any range 51000 51100
+        190 permit tcp any any eq 3333
+        200 permit tcp any any eq nat ttl eq 255
+        210 permit tcp any eq bgp any
+        220 permit rsvp any any
+        230 permit tcp any any eq 9340
+        240 permit tcp any any eq 9559
+        250 permit udp any any eq 8503
+        260 permit udp any any eq lsp-ping
+        270 permit udp any eq lsp-ping any
+        280 permit tcp any any eq domain
+        290 permit udp any any eq domain
+      system control-plane
+      ip access-group control-plane in
+      exit
+interface ether1
+no switchport 
+ip address 192.168.101.1 255.255.255.0
+no shutdown
+exit
+interface loopback 0
+ip address 10.255.255.255 255.255.255.255
+exit
+ip routing
+router ospf 1 
+router-id 1.1.1.1
+network 192.168.101.0 0.0.0.255 area 0
+network 10.255.255.255 0.0.0.0 area 0
+exit
+write memory
+#
+
+## This command is very important to configure the router to make connectivity of router ip routing
+
+-------------------------------------------------------------------------------------------------------
+# Command to configure the router DNS Server #2
+-------------------------------------------------------------------------------------------------------
+enable
+conf t
+ip name-server vrf default 8.8.8.8
+ip domain proxy
+ip access-list control-plane
+        counters per-entry
+        10 permit icmp any any
+        20 permit ip any any tracked
+        30 permit udp any any eq bfd ttl eq 255
+        40 permit udp any any eq bfd-echo ttl eq 254
+        50 permit udp any any eq multihop-bfd micro-bfd sbfd
+        60 permit udp any eq sbfd any eq sbfd-initiator
+        70 permit ospf any any 
+        80 permit tcp any any eq ssh telnet www snmp bgp https msdp ldp netconf-ssh gnmi
+        90 permit udp any any eq bootps bootpc snmp rip ntp ldp ptp-event ptp-general
+        100 permit tcp any any eq mlag ttl eq 255
+        110 permit udp any any eq mlag ttl eq 255
+        120 permit vrrp any any
+        130 permit ahp any any
+        140 permit pim any any
+        150 permit igmp any any
+        160 permit tcp any any range 5900 5910
+        170 permit tcp any any range 50000 50100
+        180 permit udp any any range 51000 51100
+        190 permit tcp any any eq 3333
+        200 permit tcp any any eq nat ttl eq 255
+        210 permit tcp any eq bgp any
+        220 permit rsvp any any
+        230 permit tcp any any eq 9340
+        240 permit tcp any any eq 9559
+        250 permit udp any any eq 8503
+        260 permit udp any any eq lsp-ping
+        270 permit udp any eq lsp-ping any
+        280 permit tcp any any eq domain
+        290 permit udp any any eq domain
+      system control-plane
+      ip access-group control-plane in
+      exit
+interface ether1
+no switchport 
+ip address 192.168.102.1 255.255.255.0
+no shutdown
+exit
+interface loopback 0
+ip address 10.255.255.255 255.255.255.255
+exit
+ip routing
+router ospf 1 
+router-id 2.2.2.2
+network 192.168.102.0 0.0.0.255 area 0
+network 10.255.255.255 0.0.0.0 area 0
+exit
+write memory
+#
+#ip access-list standard NAT_ACL
+  permit 192.168.103.0/24
+tcpdam
+
+#
+
+# check if necessary put the access list to connect inside the network
+ip nat inside source list 7 pool no-overload 
+access-list 7 permit 192.168.101.0/24
+access-list 7 permit 172.16.12.0/24
+#can use the ip of google 8.8.8.8
+
+#check how you configure the dns in the router and DHCP and nat to connectivity outisde de network
+#r1(config)# ip access-list extended ACL_NAT
+#r1(config-ext-nacl)# permit ip 192.168.103.0 0.0.0.255 any
+
+#ip nat source dynamic access-list ACL_IP_ANY overload
+
+enable
+configure terminal
+ip name-server 8.8.8.8  # External DNS
+ip name-server 1.1.1.1  # Another External DNS
+nslookup www.google.com 10.255.255.255
+dig 
+nslookup www.google.com 10.255.255.255
+
+
+#configuration off dns
+#ip name-server vrf default 8.8.8.8
+#
+#
+#
+#int eth3 
+ip nat source dynamic access-list lista overload
+ip acccess-list lista
+  10 permit ip 192.168.0.0/16
+
+#configuration of nat 
+#int ether1
+#ip nat source dynamic access-list lista overload
+#ip acccess-list lista
+#10 permit ip 192.168.0.0.16 any
+
+
+#command to configute the dns server 
+#etc/resolve.conf 
+#

@@ -1,0 +1,144 @@
+enable
+configure
+hostname clab-anycast-r1
+interface Ethernet1
+ip address 172.20.20.5/24
+no shutdown
+router ospf 1
+router-id 1.1.1.1
+network 172.20.20.0/24 area 0
+end
+write memory
+
+
+configure
+!
+hostname clab-anycast-r2
+!
+interface Ethernet1
+  ip address 172.20.20.4/24
+  ipv6 address 3fff:172:20:20::4/64
+  no shutdown
+!
+router ospf 1
+  router-id 2.2.2.2
+  network 172.20.20.0/24 area 0
+!
+ipv6 router ospf 1
+  router-id 2.2.2.2
+  network 3fff:172:20:20::/64 area 0
+!
+end
+write memory
+
+
+configure
+!
+hostname clab-anycast-dns1
+!
+interface Ethernet1
+  ip address 172.20.20.3/24
+  ipv6 address 3fff:172:20:20::3/64
+  no shutdown
+!
+router ospf 1
+  router-id 3.3.3.3
+  network 172.20.20.0/24 area 0
+!
+ipv6 router ospf 1
+  router-id 3.3.3.3
+  network 3fff:172:20:20::/64 area 0
+!
+end
+write memory
+
+configure
+!
+hostname clab-anycast-dns2
+!
+interface Ethernet1
+  ip address 172.20.20.6/24
+  ipv6 address 3fff:172:20:20::6/64
+  no shutdown
+!
+router ospf 1
+  router-id 4.4.4.4
+  network 172.20.20.0/24 area 0
+!
+ipv6 router ospf 1
+  router-id 4.4.4.4
+  network 3fff:172:20:20::/64 area 0
+!
+end
+write memory
+
+#resolve dns no cliente
+
+traceroute 172.20.20.3
+traceroute 172.20.20.6
+
+        10 permit icmp any any [match 1256 bytes in 14 packets, 0:20:03 ago]
+        20 permit ip any any tracked
+        30 permit udp any any eq bfd ttl eq 255
+        40 permit udp any any eq bfd-echo ttl eq 254
+        50 permit udp any any eq multihop-bfd micro-bfd sbfd
+        60 permit udp any eq sbfd any eq sbfd-initiator
+        70 permit ospf any any [match 12744 bytes in 181 packets, 0:00:00 ago]
+        80 permit tcp any any eq ssh telnet www snmp bgp https msdp ldp netconf-ssh gnmi
+        90 permit udp any any eq bootps bootpc snmp rip ntp ldp ptp-event ptp-general
+        100 permit tcp any any eq mlag ttl eq 255
+        110 permit udp any any eq mlag ttl eq 255
+        120 permit vrrp any any
+        130 permit ahp any any
+        140 permit pim any any
+        150 permit igmp any any
+        160 permit tcp any any range 5900 5910
+        170 permit tcp any any range 50000 50100
+        180 permit udp any any range 51000 51100
+        190 permit tcp any any eq 3333
+        200 permit tcp any any eq nat ttl eq 255
+        210 permit tcp any eq bgp any
+        220 permit rsvp any any
+        230 permit tcp any any eq 9340
+        240 permit tcp any any eq 9559
+        250 permit udp any any eq 8503
+        260 permit udp any any eq lsp-ping
+        270 permit udp any eq lsp-ping any
+        280 permit tcp any any eq domain
+        290 permit udp any any eq domain
+        (implicit) deny ip any any
+
+        ip access-list control-plane
+        counters per-entry
+        10 permit icmp any any
+        20 permit ip any any tracked
+        30 permit udp any any eq bfd ttl eq 255
+        40 permit udp any any eq bfd-echo ttl eq 254
+        50 permit udp any any eq multihop-bfd micro-bfd sbfd
+        60 permit udp any eq sbfd any eq sbfd-initiator
+        70 permit ospf any any [match 18224 bytes in 258 packets, 0:00:00 ago]
+        80 permit tcp any any eq ssh telnet www snmp bgp https msdp ldp netconf-ssh gnmi
+        90 permit udp any any eq bootps bootpc snmp rip ntp ldp ptp-event ptp-general
+        100 permit tcp any any eq mlag ttl eq 255
+        110 permit udp any any eq mlag ttl eq 255
+        120 permit vrrp any any
+        130 permit ahp any any
+        140 permit pim any any
+        150 permit igmp any any
+        160 permit tcp any any range 5900 5910
+        170 permit tcp any any range 50000 50100
+        180 permit udp any any range 51000 51100
+        190 permit tcp any any eq 3333
+        200 permit tcp any any eq nat ttl eq 255
+        210 permit tcp any eq bgp any
+        220 permit rsvp any any
+        230 permit tcp any any eq 9340
+        240 permit tcp any any eq 9559
+        250 permit udp any any eq 8503
+        260 permit udp any any eq lsp-ping
+        270 permit udp any eq lsp-ping any
+        280 permit tcp any any eq domain
+        290 permit udp any any eq domain
+      system control-plane
+      ip access-group control-plane in
+      write

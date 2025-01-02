@@ -1,0 +1,267 @@
+{
+  "name": "anycast",
+  "type": "clab",
+  "clab": {
+    "config": {
+      "prefix": "clab",
+      "mgmt": {
+        "network": "clab",
+        "bridge": "br-ef402704e7c7",
+        "ipv4-subnet": "172.20.20.0/24",
+        "ipv4-gw": "172.20.20.1",
+        "ipv6-subnet": "3fff:172:20:20::/64",
+        "ipv6-gw": "3fff:172:20:20::1",
+        "mtu": 1500,
+        "external-access": true
+      }
+    }
+  },
+  "nodes": {
+    "client": {
+      "index": "0",
+      "shortname": "client",
+      "longname": "clab-anycast-client",
+      "fqdn": "client.anycast.io",
+      "group": "",
+      "labdir": "/home/Trabalho/REAS/Trab2/trab-Anycast/clab-anycast/client",
+      "kind": "linux",
+      "image": "wbitt/network-multitool:extra",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.2",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::2",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-ef402704e7c7",
+        "clab-node-group": "",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/Trabalho/REAS/Trab2/trab-Anycast/clab-anycast/client",
+        "clab-node-name": "client",
+        "clab-node-type": "",
+        "clab-owner": "paulo",
+        "clab-topo-file": "/home/Trabalho/REAS/Trab2/trab-Anycast/conf.clab.yaml",
+        "containerlab": "anycast"
+      },
+      "port-bindings": [
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 443,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 80,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 11443,
+          "protocol": "tcp"
+        },
+        {
+          "host-ip": "",
+          "host-port": 0,
+          "port": 1180,
+          "protocol": "tcp"
+        }
+      ]
+    },
+    "dns1": {
+      "index": "1",
+      "shortname": "dns1",
+      "longname": "clab-anycast-dns1",
+      "fqdn": "dns1.anycast.io",
+      "group": "",
+      "labdir": "/home/Trabalho/REAS/Trab2/trab-Anycast/clab-anycast/dns1",
+      "kind": "ceos",
+      "image": "ceos",
+      "mgmt-net": "",
+      "mgmt-intf": "Management0",
+      "mgmt-ipv4-address": "172.20.20.5",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::5",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "00:1c:73:ab:7e:35",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-ef402704e7c7",
+        "clab-node-group": "",
+        "clab-node-kind": "ceos",
+        "clab-node-lab-dir": "/home/Trabalho/REAS/Trab2/trab-Anycast/clab-anycast/dns1",
+        "clab-node-name": "dns1",
+        "clab-node-type": "",
+        "clab-owner": "paulo",
+        "clab-topo-file": "/home/Trabalho/REAS/Trab2/trab-Anycast/conf.clab.yaml",
+        "containerlab": "anycast"
+      },
+      "port-bindings": [
+      ]
+    },
+    "dns2": {
+      "index": "2",
+      "shortname": "dns2",
+      "longname": "clab-anycast-dns2",
+      "fqdn": "dns2.anycast.io",
+      "group": "",
+      "labdir": "/home/Trabalho/REAS/Trab2/trab-Anycast/clab-anycast/dns2",
+      "kind": "ceos",
+      "image": "ceos",
+      "mgmt-net": "",
+      "mgmt-intf": "Management0",
+      "mgmt-ipv4-address": "172.20.20.3",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::3",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "00:1c:73:06:e2:85",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-ef402704e7c7",
+        "clab-node-group": "",
+        "clab-node-kind": "ceos",
+        "clab-node-lab-dir": "/home/Trabalho/REAS/Trab2/trab-Anycast/clab-anycast/dns2",
+        "clab-node-name": "dns2",
+        "clab-node-type": "",
+        "clab-owner": "paulo",
+        "clab-topo-file": "/home/Trabalho/REAS/Trab2/trab-Anycast/conf.clab.yaml",
+        "containerlab": "anycast"
+      },
+      "port-bindings": [
+      ]
+    },
+    "r1": {
+      "index": "3",
+      "shortname": "r1",
+      "longname": "clab-anycast-r1",
+      "fqdn": "r1.anycast.io",
+      "group": "",
+      "labdir": "/home/Trabalho/REAS/Trab2/trab-Anycast/clab-anycast/r1",
+      "kind": "ceos",
+      "image": "ceos",
+      "mgmt-net": "",
+      "mgmt-intf": "Management0",
+      "mgmt-ipv4-address": "172.20.20.6",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::6",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "00:1c:73:5e:af:00",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-ef402704e7c7",
+        "clab-node-group": "",
+        "clab-node-kind": "ceos",
+        "clab-node-lab-dir": "/home/Trabalho/REAS/Trab2/trab-Anycast/clab-anycast/r1",
+        "clab-node-name": "r1",
+        "clab-node-type": "",
+        "clab-owner": "paulo",
+        "clab-topo-file": "/home/Trabalho/REAS/Trab2/trab-Anycast/conf.clab.yaml",
+        "containerlab": "anycast"
+      },
+      "port-bindings": [
+      ]
+    },
+    "r2": {
+      "index": "4",
+      "shortname": "r2",
+      "longname": "clab-anycast-r2",
+      "fqdn": "r2.anycast.io",
+      "group": "",
+      "labdir": "/home/Trabalho/REAS/Trab2/trab-Anycast/clab-anycast/r2",
+      "kind": "ceos",
+      "image": "ceos",
+      "mgmt-net": "",
+      "mgmt-intf": "Management0",
+      "mgmt-ipv4-address": "172.20.20.4",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::4",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "00:1c:73:ba:64:7f",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-ef402704e7c7",
+        "clab-node-group": "",
+        "clab-node-kind": "ceos",
+        "clab-node-lab-dir": "/home/Trabalho/REAS/Trab2/trab-Anycast/clab-anycast/r2",
+        "clab-node-name": "r2",
+        "clab-node-type": "",
+        "clab-owner": "paulo",
+        "clab-topo-file": "/home/Trabalho/REAS/Trab2/trab-Anycast/conf.clab.yaml",
+        "containerlab": "anycast"
+      },
+      "port-bindings": [
+      ]
+    }
+  },
+  "links": [
+    {
+      "a": {
+        "node": "r1",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:8f:64:6f",
+        "peer": "z"
+      },
+      "z": {
+        "node": "r2",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:29:82:27",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "r1",
+        "interface": "eth2",
+        "mac": "aa:c1:ab:f0:6f:4c",
+        "peer": "z"
+      },
+      "z": {
+        "node": "client",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:41:f9:31",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "r1",
+        "interface": "eth3",
+        "mac": "aa:c1:ab:b7:f3:cc",
+        "peer": "z"
+      },
+      "z": {
+        "node": "host",
+        "interface": "enp0s3",
+        "mac": "08:00:27:5a:1a:f2",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "r1",
+        "interface": "eth4",
+        "mac": "aa:c1:ab:18:2c:3f",
+        "peer": "z"
+      },
+      "z": {
+        "node": "dns1",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:1b:90:d6",
+        "peer": "a"
+      }
+    },
+    {
+      "a": {
+        "node": "r2",
+        "interface": "eth2",
+        "mac": "aa:c1:ab:9b:9f:fa",
+        "peer": "z"
+      },
+      "z": {
+        "node": "dns2",
+        "interface": "eth1",
+        "mac": "aa:c1:ab:b7:44:0f",
+        "peer": "a"
+      }
+    }
+  ]
+}

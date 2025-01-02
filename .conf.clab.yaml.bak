@@ -1,0 +1,25 @@
+name: anycast 
+topology: 
+  kinds: 
+    linux: 
+      image: wbitt/network-multitool:extra 
+    ceos: 
+      image: ceos 
+  nodes: 
+    r1: 
+      kind: ceos 
+    r2: 
+      kind: ceos 
+    dns1: 
+      kind: ceos 
+    dns2: 
+      kind: ceos 
+    client: 
+      kind: linux 
+ 
+  links: 
+    - endpoints: ["r1:eth1", "r2:eth1"] 
+    - endpoints: ["r1:eth2", "client:eth1"] 
+    - endpoints: ["r1:eth3", "macvlan:enp0s3"] 
+    - endpoints: ["r1:eth4", "dns1:eth1"] 
+    - endpoints: ["r2:eth2", "dns2:eth1"]
